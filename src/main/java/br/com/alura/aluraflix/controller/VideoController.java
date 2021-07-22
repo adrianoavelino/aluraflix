@@ -49,4 +49,14 @@ public class VideoController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @PutMapping
+    public ResponseEntity<Video> atualizar(@RequestBody Video video) {
+        Optional<Video> videoSalvo = repository.findById(video.getId());
+        if (videoSalvo.isPresent()) {
+            repository.save(video);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
 }
