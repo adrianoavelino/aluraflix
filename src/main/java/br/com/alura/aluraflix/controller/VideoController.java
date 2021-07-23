@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +35,7 @@ public class VideoController {
     }
 
     @PostMapping
-    public ResponseEntity<Video> salvar(@RequestBody Video video, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<Video> salvar(@RequestBody @Valid Video video, UriComponentsBuilder uriBuilder) {
         repository.save(video);
         URI uri = uriBuilder.path("/videos/{id}").buildAndExpand(video.getId()).toUri();
         return ResponseEntity.created(uri).body(video);
@@ -51,7 +52,7 @@ public class VideoController {
     }
 
     @PutMapping
-    public ResponseEntity<Video> atualizar(@RequestBody Video video) {
+    public ResponseEntity<Video> atualizar(@RequestBody @Valid Video video) {
         Optional<Video> videoSalvo = repository.findById(video.getId());
         if (videoSalvo.isPresent()) {
             repository.save(video);
