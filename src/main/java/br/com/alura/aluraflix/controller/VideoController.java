@@ -5,6 +5,8 @@ import br.com.alura.aluraflix.controller.dto.VideoRequestAtualizar;
 import br.com.alura.aluraflix.controller.dto.VideoResponse;
 import br.com.alura.aluraflix.entity.Video;
 import br.com.alura.aluraflix.repository.VideoRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -25,8 +27,8 @@ public class VideoController {
     }
 
     @GetMapping
-    public List<Video> buscarTodos() {
-        return repository.findAll();
+    public Page<Video> buscarTodos(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 
     @GetMapping(path = "/{id}")
