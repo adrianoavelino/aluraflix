@@ -1,10 +1,12 @@
 package br.com.alura.aluraflix.controller;
 
+import br.com.alura.aluraflix.controller.dto.VideoRequestSalvar;
+import br.com.alura.aluraflix.controller.dto.VideoRequestAtualizar;
+import br.com.alura.aluraflix.controller.dto.VideoResponse;
 import br.com.alura.aluraflix.entity.Video;
 import br.com.alura.aluraflix.repository.VideoRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
@@ -35,10 +37,10 @@ public class VideoController {
     }
 
     @PostMapping
-    public ResponseEntity<Video> salvar(@RequestBody @Valid Video video, UriComponentsBuilder uriBuilder) {
-        repository.save(video);
+    public ResponseEntity<VideoResponse> salvar(@RequestBody @Valid VideoRequestSalvar videoRequest, UriComponentsBuilder uriBuilder) {
+        Video video = repository.save(videoRequest.converterParaVideo());
         URI uri = uriBuilder.path("/videos/{id}").buildAndExpand(video.getId()).toUri();
-        return ResponseEntity.created(uri).body(video);
+        return ResponseEntity.created(uri).body(new VideoResponse(video));
     }
 
     @DeleteMapping("/{id}")
@@ -52,11 +54,11 @@ public class VideoController {
     }
 
     @PutMapping
-    public ResponseEntity<Video> atualizar(@RequestBody @Valid Video video) {
-        Optional<Video> videoSalvo = repository.findById(video.getId());
-        if (videoSalvo.isPresent()) {
-            repository.save(video);
-            return ResponseEntity.ok().build();
+    public ResponseEntity<VideoResponse> atualizar(@RequestBody @Valid VideoRequestAtualizar videoRequest) {
+        Optional<Video> video = repository.findById(videoRequest.getId());
+        if (video.isPresent()) {
+            repository.save(videoRequest.converterParaVideo());
+            return ResponseEntity.ok().body(new VideoResponse(videoRequest.converterParaVideo()));
         }
         return ResponseEntity.notFound().build();
     }

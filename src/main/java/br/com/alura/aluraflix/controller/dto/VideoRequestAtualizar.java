@@ -1,18 +1,15 @@
-package br.com.alura.aluraflix.entity;
+package br.com.alura.aluraflix.controller.dto;
 
+import br.com.alura.aluraflix.entity.Video;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.URL;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.util.Objects;
+import javax.validation.constraints.NotNull;
 
-@Entity
-@Table(name = "videos")
-public class Video {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class VideoRequestAtualizar {
+    @NotNull(message = "Ops, vocẽ esqueceu do campo id")
+    private  Long id;
 
     @NotBlank(message = "Ops, você esqueceu do título")
     @Length(min = 3, message = "O campo precisa ter no mínimo {min} letras")
@@ -28,48 +25,39 @@ public class Video {
     @URL(message = "Você deve usar uma url válida. Ex: http://www.site.com.br")
     private String url;
 
-    public Video() {
-    }
-
-    public Video(String titulo, String descricao, String url) {
-        this.titulo = titulo;
-        this.descricao = descricao;
-        this.url = url;
-    }
-
-    public Video(Long id, String titulo, String descricao, String url) {
-        this.id = id;
-        this.titulo = titulo;
-        this.descricao = descricao;
-        this.url = url;
-    }
-
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitulo() {
         return titulo;
     }
 
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
     public String getDescricao() {
         return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
     public String getUrl() {
         return url;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Video video = (Video) o;
-        return Objects.equals(id, video.id);
+    public void setUrl(String url) {
+        this.url = url;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
+    public Video converterParaVideo() {
+        return new Video(this.id, this.titulo, this.descricao, this.url);
     }
 }
