@@ -4,32 +4,26 @@ import br.com.alura.aluraflix.entity.Video;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.URL;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
-
 public class VideoRequestSalvar {
-    @NotBlank(message = "Ops, você esqueceu do título")
-    @Length(min = 3, message = "O campo precisa ter no mínimo {min} letras")
-    @Length(max = 150, message = "O campo precisa ter no máximo {max} letras")
-    private String titulo;
+    @Length(min = 3, message = "precisa ter no mínimo {min} letras")
+    @Length(max = 150, message = "precisa ter no máximo {max} letras")
+    protected String titulo;
 
-    @NotBlank(message = "Ops, você esqueceu da descrição")
-    @Length(min = 3, message = "O campo precisa ter no mínimo {min} letras")
-    @Length(max = 255, message = "O campo precisa ter no máximo {max} letras")
-    private String descricao;
+    @Length(min = 3, message = "precisa ter no mínimo {min} letras")
+    @Length(max = 255, message = "precisa ter no máximo {max} letras")
+    protected String descricao;
 
     @NotBlank(message = "Ops, você esqueceu da URL")
     @URL(message = "Você deve usar uma url válida. Ex: http://www.site.com.br")
-    private String url;
+    protected String url;
 
     public String getTitulo() {
         return titulo;
     }
 
     public void setTitulo(String titulo) {
-        this.titulo = titulo;
+        this.titulo = titulo.trim();
     }
 
     public String getDescricao() {
@@ -37,15 +31,15 @@ public class VideoRequestSalvar {
     }
 
     public void setDescricao(String descricao) {
-        this.descricao = descricao;
+        this.descricao = descricao.trim();
     }
 
     public String getUrl() {
-        return url;
+        return url.trim();
     }
 
     public void setUrl(String url) {
-        this.url = url;
+        this.url = url.trim();
     }
 
     public Video converterParaVideo() {

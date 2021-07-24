@@ -14,14 +14,12 @@ public class Video {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Ops, você esqueceu do título")
-    @Length(min = 3, message = "O campo precisa ter no mínimo {min} letras")
-    @Length(max = 150, message = "O campo precisa ter no máximo {max} letras")
+    @Length(min = 3, message = "precisa ter no mínimo {min} letras")
+    @Length(max = 150, message = "precisa ter no máximo {max} letras")
     private String titulo;
 
-    @NotBlank(message = "Ops, você esqueceu da descrição")
-    @Length(min = 3, message = "O campo precisa ter no mínimo {min} letras")
-    @Length(max = 255, message = "O campo precisa ter no máximo {max} letras")
+    @Length(min = 3, message = "precisa ter no mínimo {min} letras")
+    @Length(max = 255, message = "precisa ter no máximo {max} letras")
     private String descricao;
 
     @NotBlank(message = "Ops, você esqueceu da URL")
@@ -32,16 +30,16 @@ public class Video {
     }
 
     public Video(String titulo, String descricao, String url) {
-        this.titulo = titulo;
-        this.descricao = descricao;
-        this.url = url;
+        this.titulo = titulo.trim();
+        this.descricao = descricao.trim();
+        this.url = url.trim();
     }
 
     public Video(Long id, String titulo, String descricao, String url) {
         this.id = id;
-        this.titulo = titulo;
-        this.descricao = descricao;
-        this.url = url;
+        this.titulo = titulo.trim();
+        this.descricao = descricao.trim();
+        this.url = url.trim();
     }
 
     public Long getId() {
