@@ -1,10 +1,6 @@
 package br.com.alura.aluraflix.controller.dto;
 
 import br.com.alura.aluraflix.entity.Video;
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.URL;
-
-import javax.validation.constraints.NotBlank;
 
 public class VideoResponse {
     private Long id;
