@@ -59,6 +59,11 @@ Comando para executar testes no terminal:
 ```bash
 ./mvnw test -Dtest=br.com.alura.aluraflix.repository.VideoRepositoryTest -e
 ```
+- Controller:
+```bash
+./mvnw test -Dtest=br.com.alura.aluraflix.controller.VideoControllerTest -e
+```
+
 ### Testes manuais
 - GET `/v1/videos`:
 ```bash
