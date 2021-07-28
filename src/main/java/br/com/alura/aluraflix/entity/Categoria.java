@@ -1,6 +1,7 @@
 package br.com.alura.aluraflix.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 
 @Entity
@@ -10,8 +11,10 @@ public class Categoria {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Ops, você esqueceu do título")
     private String titulo;
 
+    @NotBlank(message = "Ops, você esqueceu da cor")
     private String cor;
 
     public Categoria() {
