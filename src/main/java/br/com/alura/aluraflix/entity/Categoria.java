@@ -14,6 +14,9 @@ public class Categoria {
 
     private String cor;
 
+    public Categoria() {
+    }
+
     public Categoria(String titulo, String cor) {
         this.titulo = titulo;
         this.cor = cor;
