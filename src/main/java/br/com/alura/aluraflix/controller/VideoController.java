@@ -13,7 +13,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -27,8 +26,8 @@ public class VideoController {
     }
 
     @GetMapping
-    public Page<Video> buscarTodos(Pageable pageable) {
-        return repository.findAll(pageable);
+    public Page<VideoResponse> buscarTodos(Pageable pageable) {
+        return repository.findAll(pageable).map(VideoResponse::new);
     }
 
     @GetMapping(path = "/{id}")
