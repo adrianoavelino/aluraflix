@@ -1,5 +1,6 @@
 package br.com.alura.aluraflix.controller;
 
+import br.com.alura.aluraflix.controller.dto.CategoriaRequestAtualizar;
 import br.com.alura.aluraflix.controller.dto.CategoriaRequestSalvar;
 import br.com.alura.aluraflix.controller.dto.CategoriaResponse;
 import br.com.alura.aluraflix.entity.Categoria;
@@ -41,5 +42,15 @@ public class CategoriaController {
         Categoria categoria = this.repository.save(categoriaRequest.converterParaCategoria());
         URI uri = uriBuilder.path("/v1/categorias/{id}").buildAndExpand(categoria.getId()).toUri();
         return ResponseEntity.created(uri).body(new CategoriaResponse(categoria));
+    }
+
+    @PutMapping
+    public ResponseEntity<CategoriaResponse> atualizar(@RequestBody @Valid CategoriaRequestAtualizar categoriaRequest) {
+        Optional<Categoria> categoriaOptional = this.repository.findById(categoriaRequest.getId());
+        if (categoriaOptional.isPresent()) {
+            this.repository.save(categoriaRequest.converterParaCategoria());
+            return ResponseEntity.ok(new CategoriaResponse(categoriaRequest.converterParaCategoria()));
+        }
+        return ResponseEntity.notFound().build();
     }
 }

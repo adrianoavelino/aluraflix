@@ -6,9 +6,9 @@ import javax.validation.constraints.NotBlank;
 
 public class CategoriaRequestSalvar {
     @NotBlank(message = "Ops, você esqueceu do título")
-    private String titulo;
+    protected String titulo;
     @NotBlank(message = "Ops, você esqueceu da cor")
-    private String cor;
+    protected String cor;
 
     public String getTitulo() {
         return titulo;
