@@ -25,4 +25,12 @@ public class CategoriaController {
     public Page<CategoriaResponse> buscarTodas(Pageable pageable) {
         return this.repository.findAll(pageable).map(CategoriaResponse::new);
     }
+
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<CategoriaResponse> buscarPorId(@PathVariable Long id) {
+        Optional<Categoria> categoriaOptional = this.repository.findById(id);
+        if (categoriaOptional.isPresent()) return ResponseEntity.ok(new CategoriaResponse(categoriaOptional.get()));
+        return ResponseEntity.notFound().build();
+    }
+
 }
