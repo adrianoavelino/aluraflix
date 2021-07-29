@@ -31,9 +31,11 @@ public class VideoController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<Video> buscarPorId(@PathVariable("id") Long id) {
+    public ResponseEntity<VideoResponse> buscarPorId(@PathVariable("id") Long id) {
         Optional<Video> video = repository.findById(id);
-        if (video.isPresent()) return ResponseEntity.ok(video.get());
+        if (video.isPresent()) {
+            return ResponseEntity.ok(new VideoResponse(video.get()));
+        }
         return ResponseEntity.notFound().build();
     }
 
