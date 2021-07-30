@@ -6,8 +6,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,5 +35,13 @@ public class ErroDeValidacaoHandler {
         });
         
         return mensagensErro;
+    }
+
+    @ExceptionHandler(ResourceNotFound.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public MensagemErro handleEntityNotFound(ResourceNotFound ex, WebRequest request) {
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        return new MensagemErro("categoriaId", ex.getMessage());
     }
 }
