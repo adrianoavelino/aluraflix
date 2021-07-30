@@ -2,6 +2,8 @@ package br.com.alura.aluraflix.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -16,6 +18,9 @@ public class Categoria {
 
     @NotBlank(message = "Ops, você esqueceu da cor")
     private String cor;
+
+    @OneToMany(mappedBy = "categoria")
+    private List<Video> videos = new ArrayList<>();
 
     public Categoria() {
     }
@@ -41,6 +46,10 @@ public class Categoria {
 
     public String getCor() {
         return cor;
+    }
+
+    public List<Video> getVideos() {
+        return videos;
     }
 
     @Override

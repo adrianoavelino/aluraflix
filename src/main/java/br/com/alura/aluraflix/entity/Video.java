@@ -26,20 +26,26 @@ public class Video {
     @URL(message = "Você deve usar uma url válida. Ex: http://www.site.com.br")
     private String url;
 
+    @ManyToOne
+    @JoinColumn(foreignKey=@ForeignKey(name = "fk_categoria_id"))
+    private Categoria categoria;
+
     public Video() {
     }
 
-    public Video(String titulo, String descricao, String url) {
+    public Video(String titulo, String descricao, String url, Categoria categoria) {
         this.titulo = titulo.trim();
         this.descricao = descricao.trim();
         this.url = url.trim();
+        this.categoria = categoria;
     }
 
-    public Video(Long id, String titulo, String descricao, String url) {
+    public Video(Long id, String titulo, String descricao, String url, Categoria categoria) {
         this.id = id;
         this.titulo = titulo.trim();
         this.descricao = descricao.trim();
         this.url = url.trim();
+        this.categoria = categoria;
     }
 
     public Long getId() {
@@ -56,6 +62,10 @@ public class Video {
 
     public String getUrl() {
         return url;
+    }
+
+    public Categoria getCategoria() {
+        return categoria;
     }
 
     @Override
