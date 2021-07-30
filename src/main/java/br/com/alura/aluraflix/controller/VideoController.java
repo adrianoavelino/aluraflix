@@ -3,8 +3,11 @@ package br.com.alura.aluraflix.controller;
 import br.com.alura.aluraflix.controller.dto.VideoRequestSalvar;
 import br.com.alura.aluraflix.controller.dto.VideoRequestAtualizar;
 import br.com.alura.aluraflix.controller.dto.VideoResponse;
+import br.com.alura.aluraflix.entity.Categoria;
 import br.com.alura.aluraflix.entity.Video;
+import br.com.alura.aluraflix.repository.CategoriaRepository;
 import br.com.alura.aluraflix.repository.VideoRepository;
+import br.com.alura.aluraflix.validacao.ResourceNotFound;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -19,20 +22,22 @@ import java.util.Optional;
 @RequestMapping("/v1/videos")
 public class VideoController {
 
-    private  final VideoRepository repository;
+    private  final VideoRepository videoRepository;
+    private  final CategoriaRepository categoriaRepository;
 
-    public VideoController(VideoRepository repository) {
-        this.repository = repository;
+    public VideoController(VideoRepository videoRepository, CategoriaRepository categoriaRepository) {
+        this.videoRepository = videoRepository;
+        this.categoriaRepository = categoriaRepository;
     }
 
     @GetMapping
     public Page<VideoResponse> buscarTodos(Pageable pageable) {
-        return repository.findAll(pageable).map(VideoResponse::new);
+        return videoRepository.findAll(pageable).map(VideoResponse::new);
     }
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<VideoResponse> buscarPorId(@PathVariable("id") Long id) {
-        Optional<Video> video = repository.findById(id);
+        Optional<Video> video = videoRepository.findById(id);
         if (video.isPresent()) {
             return ResponseEntity.ok(new VideoResponse(video.get()));
         }
@@ -40,28 +45,33 @@ public class VideoController {
     }
 
     @PostMapping
-    public ResponseEntity<VideoResponse> salvar(@RequestBody @Valid VideoRequestSalvar videoRequest, UriComponentsBuilder uriBuilder) {
-        Video video = repository.save(videoRequest.converterParaVideo());
-        URI uri = uriBuilder.path("/videos/{id}").buildAndExpand(video.getId()).toUri();
-        return ResponseEntity.created(uri).body(new VideoResponse(video));
+    public ResponseEntity<VideoResponse> salvar(@RequestBody @Valid VideoRequestSalvar videoRequest, UriComponentsBuilder uriBuilder) throws ResourceNotFound {
+        Optional<Categoria> categoriaOptional = this.categoriaRepository.findById(videoRequest.getCategoriaId());
+        if (categoriaOptional.isPresent()) {
+            Video video = videoRepository.save(videoRequest.converterParaVideo(categoriaRepository));
+            URI uri = uriBuilder.path("/videos/{id}").buildAndExpand(video.getId()).toUri();
+            return ResponseEntity.created(uri).body(new VideoResponse(video));
+        }
+        throw new ResourceNotFound("Categoria não encontrada");
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletar(@PathVariable Long id) {
-        Optional<Video> video = repository.findById(id);
+        Optional<Video> video = videoRepository.findById(id);
         if (video.isPresent()) {
-            repository.deleteById(id);
+            videoRepository.deleteById(id);
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
     }
 
     @PutMapping
-    public ResponseEntity<VideoResponse> atualizar(@RequestBody @Valid VideoRequestAtualizar videoRequest) {
-        Optional<Video> video = repository.findById(videoRequest.getId());
+    public ResponseEntity<VideoResponse> atualizar(@RequestBody @Valid VideoRequestAtualizar videoRequest) throws ResourceNotFound {
+        Optional<Video> video = videoRepository.findById(videoRequest.getId());
         if (video.isPresent()) {
-            repository.save(videoRequest.converterParaVideo());
-            return ResponseEntity.ok().body(new VideoResponse(videoRequest.converterParaVideo()));
+            videoRepository.save(videoRequest.converterParaVideo(categoriaRepository));
+            VideoResponse response = new VideoResponse(videoRequest.converterParaVideo(categoriaRepository));
+            return ResponseEntity.ok().body(response);
         }
         return ResponseEntity.notFound().build();
     }

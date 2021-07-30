@@ -7,12 +7,17 @@ public class VideoResponse {
     private String titulo;
     private String descricao;
     private String url;
+    private Long categoriaId;
+
+    public VideoResponse() {
+    }
 
     public VideoResponse(Video video) {
         this.id = video.getId();
         this.titulo = video.getTitulo();
         this.descricao = video.getDescricao();
         this.url = video.getUrl();
+        this.categoriaId = video.getCategoria().getId();
     }
 
     public Long getId() {
@@ -29,5 +34,9 @@ public class VideoResponse {
 
     public String getUrl() {
         return url;
+    }
+
+    public Long getCategoriaId() {
+        return categoriaId;
     }
 }
