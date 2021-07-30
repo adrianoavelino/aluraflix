@@ -1,6 +1,10 @@
 package br.com.alura.aluraflix.controller;
 
+import br.com.alura.aluraflix.controller.dto.VideoRequestAtualizar;
+import br.com.alura.aluraflix.controller.dto.VideoRequestSalvar;
+import br.com.alura.aluraflix.entity.Categoria;
 import br.com.alura.aluraflix.entity.Video;
+import br.com.alura.aluraflix.repository.CategoriaRepository;
 import br.com.alura.aluraflix.repository.VideoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -24,15 +28,19 @@ public class VideoControllerTest {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private VideoRepository repository;
+    private VideoRepository videoRepository;
+
+    @Autowired
+    private CategoriaRepository categoriaRepository;
 
     @Test
     void deveSalvarVideo() throws Exception {
-        Video video = new Video("TDD", "Teste Unitário", "http://www.tdd.com.br");
+        Categoria categoria = categoriaRepository.findById(1l).get();
+        VideoRequestSalvar requestSalvar = new VideoRequestSalvar("TDD", "Teste Unitário", "http://www.tdd.com.br", categoria.getId());
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 .post("/v1/videos")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(video));
+                .content(objectMapper.writeValueAsString(requestSalvar));
 
         mockMvc.perform(request)
                 .andDo(MockMvcResultHandlers.print())
@@ -42,13 +50,14 @@ public class VideoControllerTest {
 
     @Test
     void deveAtualizarVideo() throws Exception {
-        Video video = new Video("TDD", "Teste Unitário", "http://www.tdd.com.br");
-        Video videoSalvo = this.repository.save(video);
-        Video videAtualizado = new Video(video.getId(), "Título Atualizado", "Descrição atualizada", "http://www.siteatualizado.com.br");;
+        Categoria categoria = categoriaRepository.findById(1l).get();
+        Video video = new Video("TDD", "Teste Unitário", "http://www.tdd.com.br", categoria);
+        Video v = this.videoRepository.save(video);
+        VideoRequestAtualizar videoRequest = new VideoRequestAtualizar(v.getId(), "Título Atualizado", "Descrição atualizada", "http://www.siteatualizado.com.br", categoria.getId());
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 .put("/v1/videos")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(videAtualizado));
+                .content(objectMapper.writeValueAsString(videoRequest));
 
         mockMvc.perform(request)
                 .andDo(MockMvcResultHandlers.print())
@@ -58,8 +67,9 @@ public class VideoControllerTest {
 
     @Test
     void deveBuscarVideoPorId() throws Exception {
-        Video video = new Video("TDD", "Teste Unitário", "http://www.tdd.com.br");
-        this.repository.save(video);
+        Categoria categoria = categoriaRepository.findById(1l).get();
+        Video video = new Video("TDD", "Teste Unitário", "http://www.tdd.com.br", categoria);
+        this.videoRepository.save(video);
         String id = video.getId().toString();
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 .get("/v1/videos/{id}", id)

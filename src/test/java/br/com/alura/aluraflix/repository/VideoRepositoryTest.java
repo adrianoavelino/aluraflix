@@ -1,5 +1,6 @@
 package br.com.alura.aluraflix.repository;
 
+import br.com.alura.aluraflix.entity.Categoria;
 import br.com.alura.aluraflix.entity.Video;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -10,28 +11,32 @@ import org.springframework.test.context.ActiveProfiles;
 import javax.validation.ConstraintViolationException;
 
 @SpringBootTest
-@ActiveProfiles("test")
+//@ActiveProfiles("test")
 class VideoRepositoryTest {
 
     @Autowired
-    private VideoRepository repository;
+    private VideoRepository videoRepository;
+
+    @Autowired
+    private CategoriaRepository categoriaRepository;
 
     @Test
     void deveSalvarUmVideo() {
-        Video video = new Video("TDD", "Teste Unitário", "http://www.tdd.com.br");
-        long totalVideoSalvoEsperado = this.repository.count() + 1;
-        Video videoSalvo = this.repository.save(video);
-        Assertions.assertThat(totalVideoSalvoEsperado).isEqualTo(this.repository.count());
+        Categoria categoria = categoriaRepository.findById(1l).get();
+        Video video = new Video("TDD", "Teste Unitário", "http://www.tdd.com.br", categoria);
+        long totalVideoSalvoEsperado = this.videoRepository.count() + 1;
+        Video videoSalvo = this.videoRepository.save(video);
+        Assertions.assertThat(totalVideoSalvoEsperado).isEqualTo(this.videoRepository.count());
         Assertions.assertThat(videoSalvo).usingRecursiveComparison().ignoringFields("id").isEqualTo(video);
     }
 
     @Test
     void deveMostrarErrosWhenSalvarVideoComDadosInvalidos() {
-        Video video = new Video("", "", "");
+        Video video = new Video("", "", "", new Categoria());
 
         Throwable throable = org.junit.jupiter.api.Assertions.assertThrows(
                 ConstraintViolationException.class,
-                () -> this.repository.save(video)
+                () -> this.videoRepository.save(video)
         );
 
         Assertions.assertThat(throable).isInstanceOf(ConstraintViolationException.class);
@@ -41,11 +46,12 @@ class VideoRepositoryTest {
 
     @Test
     void deveMostrarErroQuandoSalvarVideoComUrlInvalida() {
-        Video video = new Video("TDD", "Teste Unitário", "urlinvalida.com.br");
+        Categoria categoria = categoriaRepository.findById(1l).get();
+        Video video = new Video("TDD", "Teste Unitário", "urlinvalida.com.br", categoria);
 
         Throwable throwable = org.junit.jupiter.api.Assertions.assertThrows(
                 ConstraintViolationException.class,
-                () -> this.repository.save(video)
+                () -> this.videoRepository.save(video)
         );
 
         Assertions.assertThat(throwable).isInstanceOf(ConstraintViolationException.class);
@@ -54,28 +60,30 @@ class VideoRepositoryTest {
 
     @Test
     void deveAtualizarVideo() {
-        Video video = new Video("TDD", "Teste Unitário", "http://www.tdd.com.br");
-        this.repository.save(video);
+        Categoria categoria = categoriaRepository.findById(1l).get();
+        Video video = new Video("TDD", "Teste Unitário", "http://www.tdd.com.br", categoria);
+        Video save = this.videoRepository.save(video);
 
-        Video videoAlterado = new Video(video.getId(), "Título Atualizado", "Descrição atualizada", "http://www.siteatualizado.com.br");
-        this.repository.save(videoAlterado);
+        Video videoAlterado = new Video(video.getId(), "Título Atualizado", "Descrição atualizada", "http://www.siteatualizado.com.br", categoria);
+        this.videoRepository.save(videoAlterado);
 
-        Video videoAtual = this.repository.findById(video.getId()).get();
+        Video videoAtual = this.videoRepository.findById(save.getId()).get();
 
-        Assertions.assertThat(videoAtual).usingRecursiveComparison().isEqualTo(videoAlterado);
+        Assertions.assertThat(videoAtual).usingRecursiveComparison().ignoringFields("categoria.videos").isEqualTo(videoAlterado);
     }
 
     @Test
     void deveMostrarErrosWhenAtualizarVideoComDadosInvalidos() {
-        Video video = new Video("TDD", "Teste Unitário", "http://www.tdd.com.br");
-        this.repository.save(video);
-        Video videoAlterado = new Video(video.getId(), "", "", "");
+        Categoria categoria = categoriaRepository.findById(1l).get();
+        Video video = new Video("TDD", "Teste Unitário", "http://www.tdd.com.br", categoria);
+        this.videoRepository.save(video);
+        Video videoAlterado = new Video(video.getId(), "", "", "", categoria);
 
         Throwable throwable = org.junit.jupiter.api.Assertions.assertThrows(
             ConstraintViolationException.class,
             () -> {
                 try {
-                    this.repository.save(videoAlterado);
+                    this.videoRepository.save(videoAlterado);
                 } catch (Throwable e) {
                     throw e.getCause().getCause();
                 }
@@ -89,12 +97,13 @@ class VideoRepositoryTest {
 
     @Test
     void deveMostrarErroQuandoAtualizarVideoComUrlInvalida() {
-        Video video = new Video("TDD", "Teste Unitário", "http://www.tdd.com.br");
-        Video videoAlterado = new Video(video.getId(), "TDD Atualizado", "Teste Unitário", "urlinvalida");
+        Categoria categoria = categoriaRepository.findById(1l).get();
+        Video video = new Video("TDD", "Teste Unitário", "http://www.tdd.com.br", categoria);
+        Video videoAlterado = new Video(video.getId(), "TDD Atualizado", "Teste Unitário", "urlinvalida", categoria);
 
         Throwable throwable = org.junit.jupiter.api.Assertions.assertThrows(
             ConstraintViolationException.class,
-            () -> this.repository.save(videoAlterado)
+            () -> this.videoRepository.save(videoAlterado)
         );
 
         Assertions.assertThat(throwable).isInstanceOf(ConstraintViolationException.class);
@@ -103,25 +112,27 @@ class VideoRepositoryTest {
 
     @Test
     void deveBuscarVideoPorId() {
-        Video video = new Video("TDD", "Teste Unitário", "http://www.tdd.com.br");
-        this.repository.save(video);
+        Categoria categoria = categoriaRepository.findById(1l).get();
+        Video video = new Video("TDD", "Teste Unitário", "http://www.tdd.com.br",categoria);
+        this.videoRepository.save(video);
 
-        Video videoEncontrado = this.repository.findById(video.getId()).get();
-        Assertions.assertThat(video).usingRecursiveComparison().isEqualTo(videoEncontrado);
+        Video videoEncontrado = this.videoRepository.findById(video.getId()).get();
+        Assertions.assertThat(video).usingRecursiveComparison().ignoringFields("categoria.videos").isEqualTo(videoEncontrado);
     }
 
     @Test
     void deveBuscarTodosOsVideos() {
-        this.repository.deleteAll();
-        Video video1 = new Video("TDD 1", "Teste Unitário 1", "http://www.tdd1.com.br");
-        Video video2 = new Video("TDD 2", "Teste Unitário 2", "http://www.tdd2.com.br");
-        Video video3 = new Video("TDD 3", "Teste Unitário 3", "http://www.tdd3.com.br");
+        this.videoRepository.deleteAll();
+        Categoria categoria = categoriaRepository.findById(1l).get();
+        Video video1 = new Video("TDD 1", "Teste Unitário 1", "http://www.tdd1.com.br", categoria);
+        Video video2 = new Video("TDD 2", "Teste Unitário 2", "http://www.tdd2.com.br", categoria);
+        Video video3 = new Video("TDD 3", "Teste Unitário 3", "http://www.tdd3.com.br", categoria);
 
-        Assertions.assertThat(this.repository.count()).isEqualTo(0);
+        Assertions.assertThat(this.videoRepository.count()).isEqualTo(0);
 
-        this.repository.save(video1);
-        this.repository.save(video2);
-        this.repository.save(video3);
-        Assertions.assertThat(this.repository.count()).isEqualTo(3);
+        this.videoRepository.save(video1);
+        this.videoRepository.save(video2);
+        this.videoRepository.save(video3);
+        Assertions.assertThat(this.videoRepository.count()).isEqualTo(3);
     }
 }
