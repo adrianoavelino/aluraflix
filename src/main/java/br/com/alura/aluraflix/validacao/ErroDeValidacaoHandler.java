@@ -44,4 +44,12 @@ public class ErroDeValidacaoHandler {
         HttpStatus status = HttpStatus.NOT_FOUND;
         return new MensagemErro("categoriaId", ex.getMessage());
     }
+
+    @ExceptionHandler(ActionNotAllowed.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ResponseBody
+    public MensagemErro handleEntityNotFound(ActionNotAllowed ex, WebRequest request) {
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        return new MensagemErro("categoriaId", ex.getMessage());
+    }
 }

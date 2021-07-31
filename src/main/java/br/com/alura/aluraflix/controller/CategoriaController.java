@@ -7,6 +7,7 @@ import br.com.alura.aluraflix.controller.dto.VideoResponse;
 import br.com.alura.aluraflix.entity.Categoria;
 import br.com.alura.aluraflix.repository.CategoriaRepository;
 import br.com.alura.aluraflix.repository.VideoRepository;
+import br.com.alura.aluraflix.validacao.ActionNotAllowed;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -61,7 +62,9 @@ public class CategoriaController {
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<?> deletar(@PathVariable Long id) {
+    public ResponseEntity<?> deletar(@PathVariable Long id) throws ActionNotAllowed {
+        if (id == 1L) throw new ActionNotAllowed("Não é permitido deletar a categoria padrão LIVRE");
+        
         Optional<Categoria> categoriaOptional = this.categoriaRepository.findById(id);
         if (categoriaOptional.isPresent()) {
             this.categoriaRepository.delete(categoriaOptional.get());
