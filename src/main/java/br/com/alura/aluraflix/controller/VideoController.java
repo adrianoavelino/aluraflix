@@ -31,8 +31,11 @@ public class VideoController {
     }
 
     @GetMapping
-    public Page<VideoResponse> buscarTodos(Pageable pageable) {
-        return videoRepository.findAll(pageable).map(VideoResponse::new);
+    public Page<VideoResponse> buscarTodos(@RequestParam(required = false) String titulo, Pageable pageable) {
+        if (titulo == null) {
+            return videoRepository.findAll(pageable).map(VideoResponse::new);
+        }
+        return videoRepository.findByTitulo(titulo,pageable).map(VideoResponse::new);
     }
 
     @GetMapping(path = "/{id}")

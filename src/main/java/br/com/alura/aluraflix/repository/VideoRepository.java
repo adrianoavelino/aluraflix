@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface VideoRepository extends JpaRepository<Video, Long> {
     Page<Video> findAllByCategoriaId(Long categoriaId, Pageable pageable);
+    Page<Video> findByTitulo(String titulo, Pageable pageable);
 }
