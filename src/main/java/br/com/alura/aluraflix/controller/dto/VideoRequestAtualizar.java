@@ -5,11 +5,9 @@ import br.com.alura.aluraflix.entity.Video;
 import br.com.alura.aluraflix.repository.CategoriaRepository;
 import br.com.alura.aluraflix.validacao.ResourceNotFound;
 
-import javax.validation.constraints.NotNull;
 import java.util.Optional;
 
 public class VideoRequestAtualizar extends  VideoRequestSalvar {
-    @NotNull(message = "Ops, vocẽ esqueceu do campo id")
     private  Long id;
 
     public VideoRequestAtualizar() {

@@ -8,7 +8,6 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.URL;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.Optional;
 
 public class VideoRequestSalvar {
@@ -24,7 +23,6 @@ public class VideoRequestSalvar {
     @URL(message = "Você deve usar uma url válida. Ex: http://www.site.com.br")
     protected String url;
 
-    @NotNull(message = "Ops, vocẽ esqueceu do campo categoriaId")
     protected Long categoriaId;
 
     public VideoRequestSalvar() {

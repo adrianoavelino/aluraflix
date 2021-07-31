@@ -49,6 +49,8 @@ public class VideoController {
 
     @PostMapping
     public ResponseEntity<VideoResponse> salvar(@RequestBody @Valid VideoRequestSalvar videoRequest, UriComponentsBuilder uriBuilder) throws ResourceNotFound {
+        if (videoRequest.getCategoriaId() == null) videoRequest.setCategoriaId(1l);
+
         Optional<Categoria> categoriaOptional = this.categoriaRepository.findById(videoRequest.getCategoriaId());
         if (categoriaOptional.isPresent()) {
             Video video = videoRepository.save(videoRequest.converterParaVideo(categoriaRepository));
@@ -70,6 +72,8 @@ public class VideoController {
 
     @PutMapping
     public ResponseEntity<VideoResponse> atualizar(@RequestBody @Valid VideoRequestAtualizar videoRequest) throws ResourceNotFound {
+        if (videoRequest.getCategoriaId() == null) videoRequest.setCategoriaId(1l);
+
         Optional<Video> video = videoRepository.findById(videoRequest.getId());
         if (video.isPresent()) {
             videoRepository.save(videoRequest.converterParaVideo(categoriaRepository));
