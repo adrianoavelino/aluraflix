@@ -11,7 +11,7 @@ import org.springframework.test.context.ActiveProfiles;
 import javax.validation.ConstraintViolationException;
 
 @SpringBootTest
-//@ActiveProfiles("test")
+@ActiveProfiles("test")
 class VideoRepositoryTest {
 
     @Autowired
