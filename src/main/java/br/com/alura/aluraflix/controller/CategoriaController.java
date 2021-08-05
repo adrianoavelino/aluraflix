@@ -51,7 +51,7 @@ public class CategoriaController {
             @RequestBody @Valid CategoriaRequestSalvar categoriaRequest,
             UriComponentsBuilder uriBuilder) {
         Categoria categoria = this.categoriaService.salvar(categoriaRequest.converterParaCategoria());
-        URI uri = uriBuilder.path("/v1/categorias/").buildAndExpand(categoria.getId()).toUri();
+        URI uri = uriBuilder.path("/v1/categorias/{id}").buildAndExpand(categoria.getId()).toUri();
         return ResponseEntity.created(uri).body(new CategoriaResponse(categoria));
     }
 
