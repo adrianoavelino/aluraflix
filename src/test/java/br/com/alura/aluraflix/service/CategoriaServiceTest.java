@@ -38,14 +38,21 @@ class CategoriaServiceTest {
 
     @Test
     void deveBuscarTodasCategorias() {
-        Categoria categoria = criarCategoria();
-        Categoria categoriaComId = criarCategoriaComId();
-        BDDMockito.given(repository.save(ArgumentMatchers.any(Categoria.class)))
-                .willReturn(categoriaComId);
+        Categoria categoria1 = new Categoria(1l,"categoria1", "#aaaaaa");
+        Categoria categoria2 = new Categoria(2l,"categoria2", "#bbbbbb");
+        Categoria categoria3 = new Categoria(3l,"categoria3", "#cccccc");
 
-        Categoria categoriaSalva = this.service.salvar(categoria);
+        List<Categoria> categorias = Arrays.asList(categoria1, categoria2, categoria3);
+        PageImpl<Categoria> categoriasPage = new PageImpl<>(categorias);
 
-        Assertions.assertThat(categoriaComId).usingRecursiveComparison().isEqualTo(categoriaSalva);
+        BDDMockito.given(repository.findAll(ArgumentMatchers.any(Pageable.class)))
+                .willReturn(categoriasPage);
+
+        PageRequest pageRequest = PageRequest.of(0, 20);
+        Page<Categoria> categoriasEncontradas = this.service.buscarTodas(pageRequest);
+
+        PageImpl<Categoria> categoriasPage2 = new PageImpl<>(Arrays.asList(categoria1, categoria2, new Categoria(4l,"categoria3", "#cccccc")));
+        Assertions.assertThat(categoriasPage).usingRecursiveComparison().isEqualTo(categoriasEncontradas);
     }
 
     @Test
