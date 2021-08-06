@@ -10,6 +10,7 @@ import br.com.alura.aluraflix.repository.VideoRepository;
 import br.com.alura.aluraflix.validacao.ResourceNotFound;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -31,11 +32,11 @@ public class VideoController {
     }
 
     @GetMapping
-    public Page<VideoResponse> buscarTodos(@RequestParam(required = false) String titulo, Pageable pageable) {
+    public ResponseEntity<Page<VideoResponse>> buscarTodos(@RequestParam(required = false) String titulo, Pageable pageable) {
         if (titulo == null) {
-            return videoRepository.findAll(pageable).map(VideoResponse::new);
+            return ResponseEntity.ok(videoRepository.findAll(pageable).map(VideoResponse::new));
         }
-        return videoRepository.findByTitulo(titulo,pageable).map(VideoResponse::new);
+        return ResponseEntity.ok(videoRepository.findByTitulo(titulo,pageable).map(VideoResponse::new));
     }
 
     @GetMapping(path = "/{id}")
