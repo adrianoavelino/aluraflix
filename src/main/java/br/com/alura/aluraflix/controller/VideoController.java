@@ -32,7 +32,7 @@ public class VideoController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<VideoResponse>> buscarTodos(@RequestParam(required = false) String titulo, Pageable pageable) {
+    public ResponseEntity<Page<VideoResponse>> buscarTodos(@RequestParam(required = false) String titulo,@PageableDefault(size = 5) Pageable pageable) {
         if (titulo == null) {
             return ResponseEntity.ok(videoRepository.findAll(pageable).map(VideoResponse::new));
         }

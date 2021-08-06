@@ -10,6 +10,8 @@ import br.com.alura.aluraflix.service.CategoriaService;
 import br.com.alura.aluraflix.validacao.ActionNotAllowed;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -30,7 +32,7 @@ public class CategoriaController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<CategoriaResponse>> buscarTodas(Pageable pageable) {
+    public ResponseEntity<Page<CategoriaResponse>> buscarTodas(@PageableDefault(size = 5) Pageable pageable) {
         Page<Categoria> categorias = this.categoriaService.buscarTodas(pageable);
         Page<CategoriaResponse> categoriasResponse = categorias.map(CategoriaResponse::new);
         return ResponseEntity.ok(categoriasResponse);
@@ -74,7 +76,7 @@ public class CategoriaController {
     }
 
     @GetMapping(path = "/{id}/videos")
-    public ResponseEntity<Page<VideoResponse>> buscarVideosPorCategoriaId(@PathVariable("id") Long categoriaId, Pageable pageable) {
+    public ResponseEntity<Page<VideoResponse>> buscarVideosPorCategoriaId(@PathVariable("id") Long categoriaId, @PageableDefault(size = 5) Pageable pageable) {
         Page<VideoResponse> videosResponse = this.categoriaService.buscarVideosPorCategoriaId(categoriaId, pageable);
         return ResponseEntity.ok(videosResponse);
     }
