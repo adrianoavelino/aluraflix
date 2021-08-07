@@ -1,3 +1,5 @@
+INSERT INTO usuarios(nome, email, senha) VALUE ('Admin','admin@email.com', '$2a$10$jy2AoIfsLJKNocPgky.IKOYldkyky2t5x/6zhUYHEt3V1ywA34NIK');
+
 INSERT INTO categorias(cor, titulo) VALUES ('#000000', 'LIVRE');
 INSERT INTO categorias(cor, titulo) VALUES ('#FFFFFFF', 'PROGRAMAÇÃO');
 INSERT INTO categorias(cor, titulo) VALUES ('#CCCCCC', 'COMIDA');
