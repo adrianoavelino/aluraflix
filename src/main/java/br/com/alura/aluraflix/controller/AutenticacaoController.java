@@ -1,6 +1,7 @@
 package br.com.alura.aluraflix.controller;
 
 import br.com.alura.aluraflix.controller.dto.LoginRequest;
+import br.com.alura.aluraflix.controller.dto.TokenResponse;
 import br.com.alura.aluraflix.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,17 +26,13 @@ public class AutenticacaoController {
     private TokenService tokenService;
 
     @PostMapping
-    public ResponseEntity<?> autenticar(@RequestBody @Valid LoginRequest loginRequest) {
+    public ResponseEntity<TokenResponse> autenticar(@RequestBody @Valid LoginRequest loginRequest) {
         UsernamePasswordAuthenticationToken dadosLogin = loginRequest.converterParaUsernamePasswordAuthenticationToken();
 
         try {
             Authentication authentication = authManager.authenticate(dadosLogin);
             String token = tokenService.gerarToken(authentication);
-
-            System.out.println(token);
-            System.out.println(loginRequest.getEmail());
-            System.out.println(loginRequest.getSenha());
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(new TokenResponse(token, "Bearer"));
         } catch (Exception ex) {
             return ResponseEntity.badRequest().build();
         }
