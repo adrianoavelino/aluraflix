@@ -21,7 +21,8 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/v1/videos").permitAll()
                 .antMatchers(HttpMethod.GET, "/v1/videos/").permitAll()
-                .anyRequest().authenticated();
+                .anyRequest().authenticated()
+                .and().formLogin();
     }
 
     @Override
