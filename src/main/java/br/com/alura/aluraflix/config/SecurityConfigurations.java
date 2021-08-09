@@ -43,8 +43,7 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/v1/videos").permitAll()
-                .antMatchers(HttpMethod.GET, "/v1/videos/").permitAll()
+                .regexMatchers(HttpMethod.GET, "/v1/videos/free(/){0,1}").permitAll()
                 .antMatchers(HttpMethod.POST, "/v1/auth").permitAll()
                 .anyRequest().authenticated()
                 .and().csrf().disable()

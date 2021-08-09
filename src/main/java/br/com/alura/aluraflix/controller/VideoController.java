@@ -17,7 +17,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/v1/videos")
@@ -82,5 +84,15 @@ public class VideoController {
             return ResponseEntity.ok().body(response);
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/free")
+    public ResponseEntity<List<VideoResponse>> buscarUltimosVideos() {
+        List<VideoResponse> videosFree = videoRepository
+                .findLastTweenty()
+                .stream()
+                .map(VideoResponse::new)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(videosFree);
     }
 }
