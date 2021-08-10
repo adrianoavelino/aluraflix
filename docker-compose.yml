@@ -2,13 +2,17 @@ version: "3.5"
 
 services:
   db:
-    image: mysql:8.0.23
-    container_name: dbmysql
+    image: postgres:13.3-alpine
+    container_name: dbpostgres
     ports:
-      - "3306:3306"
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
 
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: aluraflix
-      MYSQL_USER: adriano
-      MYSQL_PASSWORD: adriano
+      POSTGRES_DB: aluraflix
+      POSTGRES_USER: adriano
+      POSTGRES_PASSWORD: adriano
+
+volumes:
+  db-data:
