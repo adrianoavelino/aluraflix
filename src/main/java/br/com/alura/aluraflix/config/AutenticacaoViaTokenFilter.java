@@ -3,6 +3,9 @@ package br.com.alura.aluraflix.config;
 import br.com.alura.aluraflix.entity.Usuario;
 import br.com.alura.aluraflix.repository.UsuarioRepository;
 import br.com.alura.aluraflix.service.TokenService;
+import io.jsonwebtoken.ExpiredJwtException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -26,11 +29,20 @@ public class AutenticacaoViaTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        String token = recuperarToken(request);
 
-        boolean valido = tokenService.validar(token);
-        if (valido) {
-            autenticarCliente(token);
+        try {
+            String token = recuperarToken(request);
+            boolean valido = tokenService.validar(token, request);
+
+            if (valido) {
+                autenticarCliente(token);
+            }
+        } catch (ExpiredJwtException ex) {
+            request.setAttribute("exception", ex);
+            throw ex;
+        } catch (BadCredentialsException ex) {
+            request.setAttribute("exception", ex);
+            throw ex;
         }
         filterChain.doFilter(request, response);
     }
