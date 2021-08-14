@@ -3,9 +3,12 @@ package br.com.alura.aluraflix.service;
 import br.com.alura.aluraflix.entity.Usuario;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpRequest;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 @Service
@@ -23,16 +26,21 @@ public class TokenService {
         return Jwts.builder()
                 .setIssuer("API Aluraflix")
                 .setSubject(usuario.getId().toString())
-                .setIssuedAt(dataExpiracao)
+                .setIssuedAt(hoje)
+                .setExpiration(dataExpiracao)
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
     }
 
-    public boolean validar(String token) {
+    public boolean validar(String token, HttpServletRequest request) {
         try {
             Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
             return true;
+        } catch (ExpiredJwtException e) {
+            request.setAttribute("exception", new Exception("Token expirado."));
+            return false;
         } catch (Exception e) {
+            request.setAttribute("exception", e);
             return false;
         }
     }
