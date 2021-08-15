@@ -16,5 +16,5 @@ public interface VideoRepository extends JpaRepository<Video, Long> {
     Page<Video> findByTitulo(String titulo, Pageable pageable);
 
     @Query(nativeQuery = true, value = "SELECT * FROM videos v ORDER BY id DESC LIMIT 10")
-    List<Video> findLastTweenty();
+    List<Video> findLastTen();
 }

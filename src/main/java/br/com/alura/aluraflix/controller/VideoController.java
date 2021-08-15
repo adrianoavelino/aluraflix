@@ -89,7 +89,7 @@ public class VideoController {
     @GetMapping("/free")
     public ResponseEntity<List<VideoResponse>> buscarUltimosVideos() {
         List<VideoResponse> videosFree = videoRepository
-                .findLastTweenty()
+                .findLastTen()
                 .stream()
                 .map(VideoResponse::new)
                 .collect(Collectors.toList());
