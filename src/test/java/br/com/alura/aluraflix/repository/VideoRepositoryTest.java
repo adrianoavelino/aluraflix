@@ -7,8 +7,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 
 import javax.validation.ConstraintViolationException;
+import java.util.List;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -134,5 +136,12 @@ class VideoRepositoryTest {
         this.videoRepository.save(video2);
         this.videoRepository.save(video3);
         Assertions.assertThat(this.videoRepository.count()).isEqualTo(3);
+    }
+
+    @Test
+    @Sql("/insert-data-test.sql")
+    void deveBuscarOsUltimosDezVideos() {
+        List<Video> dezUltimosVideos = this.videoRepository.findLastTen();
+        Assertions.assertThat(dezUltimosVideos.size()).isEqualTo(this.videoRepository.count() -1);
     }
 }
