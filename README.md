@@ -40,6 +40,22 @@ docker-compose up -d
 # inicie a aplicação
 ./mvnw spring-boot:run
 ```
+Para inicialalizar a aplicação no container no ambiente de produção execute os seguintes passos, após clonar e entrar no diretório da aplicação:
+```bash
+# gera o jar da aplicação
+./mvnw clean package -DskipTests
+
+# gera a imagem docker da aplicação
+docker build -t adrianoavelino/aluraflix:1 .
+
+# inicia o container do banco de dados
+docker-compose up -d
+
+# inicia a aplicação no docker
+docker run -it -p 8080:8080 -e SPRING_PROFILES_ACTIVE='prod' \
+--network=aluraflix_default adrianoavelino/aluraflix:1
+```
+
 ### Outras informações
 Para acessar o banco de dados via linha de comando no docker execute:
 ```bash
