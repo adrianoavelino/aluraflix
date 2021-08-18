@@ -10,9 +10,9 @@ services:
       - db-data:/var/lib/postgresql/data
 
     environment:
-      POSTGRES_DB: aluraflix
-      POSTGRES_USER: adriano
-      POSTGRES_PASSWORD: adriano
+      POSTGRES_DB: ${DATASOURCE_DATABASE}
+      POSTGRES_USER: ${DATASOURCE_USERNAME}
+      POSTGRES_PASSWORD: ${DATASOURCE_PASSWORD}
 
 volumes:
   db-data:
