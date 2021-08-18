@@ -52,7 +52,14 @@ docker build -t adrianoavelino/aluraflix:1 .
 docker-compose up -d
 
 # inicia a aplicação no docker
-docker run -it -p 8080:8080 -e SPRING_PROFILES_ACTIVE='prod' \
+docker run -it -p 8080:8080 \
+-e SPRING_PROFILES_ACTIVE='prod' \
+-e DATASOURCE_URL='jdbc:postgresql://db:5432/aluraflix' \
+-e DATASOURCE_USERNAME='adriano' \
+-e DATASOURCE_PASSWORD='adriano' \
+-e JWT_SECRET='123456' \
+-e JWT_EXPIRATION='8640000' \
+-e SERVER_PORT='8080' \
 --network=aluraflix_default adrianoavelino/aluraflix:1
 ```
 
