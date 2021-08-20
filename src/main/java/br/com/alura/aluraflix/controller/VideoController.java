@@ -1,13 +1,16 @@
 package br.com.alura.aluraflix.controller;
 
-import br.com.alura.aluraflix.controller.dto.VideoRequestSalvar;
 import br.com.alura.aluraflix.controller.dto.VideoRequestAtualizar;
+import br.com.alura.aluraflix.controller.dto.VideoRequestSalvar;
 import br.com.alura.aluraflix.controller.dto.VideoResponse;
 import br.com.alura.aluraflix.entity.Categoria;
 import br.com.alura.aluraflix.entity.Video;
 import br.com.alura.aluraflix.repository.CategoriaRepository;
 import br.com.alura.aluraflix.repository.VideoRepository;
 import br.com.alura.aluraflix.validacao.ResourceNotFound;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -23,6 +26,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/v1/videos")
+@SecurityRequirement(name = "bearerAuth")
 public class VideoController {
 
     private  final VideoRepository videoRepository;
@@ -34,7 +38,8 @@ public class VideoController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<VideoResponse>> buscarTodos(@RequestParam(required = false) String titulo,@PageableDefault(size = 5) Pageable pageable) {
+    @PageableAsQueryParam
+    public ResponseEntity<Page<VideoResponse>> buscarTodos(@RequestParam(required = false) String titulo, @Parameter(hidden = true) @PageableDefault(size = 5) Pageable pageable) {
         if (titulo == null) {
             return ResponseEntity.ok(videoRepository.findAll(pageable).map(VideoResponse::new));
         }

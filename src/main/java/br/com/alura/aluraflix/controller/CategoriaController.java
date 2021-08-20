@@ -8,9 +8,11 @@ import br.com.alura.aluraflix.entity.Categoria;
 import br.com.alura.aluraflix.repository.CategoriaRepository;
 import br.com.alura.aluraflix.service.CategoriaService;
 import br.com.alura.aluraflix.validacao.ActionNotAllowed;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/v1/categorias")
+@SecurityRequirement(name = "bearerAuth")
 public class CategoriaController {
     private final CategoriaRepository categoriaRepository;
     private final CategoriaService categoriaService;
@@ -32,7 +35,8 @@ public class CategoriaController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<CategoriaResponse>> buscarTodas(@PageableDefault(size = 5) Pageable pageable) {
+    @PageableAsQueryParam
+    public ResponseEntity<Page<CategoriaResponse>> buscarTodas(@Parameter(hidden = true) @PageableDefault(size = 5) Pageable pageable) {
         Page<Categoria> categorias = this.categoriaService.buscarTodas(pageable);
         Page<CategoriaResponse> categoriasResponse = categorias.map(CategoriaResponse::new);
         return ResponseEntity.ok(categoriasResponse);
