@@ -7,13 +7,17 @@ import br.com.alura.aluraflix.entity.Video;
 import br.com.alura.aluraflix.repository.CategoriaRepository;
 import br.com.alura.aluraflix.repository.VideoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -35,6 +39,21 @@ public class VideoControllerTest {
     @Autowired
     private CategoriaRepository categoriaRepository;
 
+    private HttpHeaders getHeader() throws Exception {
+        String credencialDeAutenticacao = "{\"email\":\"admin@email.com\",\"senha\":\"123456\"}";
+        MvcResult autententicacaoResult = mockMvc.perform(MockMvcRequestBuilders.post("/v1/auth")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(credencialDeAutenticacao))
+                .andReturn();
+
+        String content = autententicacaoResult.getResponse().getContentAsString();
+        String token = JsonPath.read(content, "$.token");
+        HttpHeaders header = new HttpHeaders();
+        header.setBearerAuth(token);
+
+        return header;
+    }
+
     @Test
     void deveSalvarVideo() throws Exception {
         Categoria categoria = categoriaRepository.findById(1l).get();
@@ -42,7 +61,8 @@ public class VideoControllerTest {
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 .post("/v1/videos")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(requestSalvar));
+                .content(objectMapper.writeValueAsString(requestSalvar))
+                .headers(this.getHeader());
 
         mockMvc.perform(request)
                 .andDo(MockMvcResultHandlers.print())
@@ -59,7 +79,8 @@ public class VideoControllerTest {
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 .put("/v1/videos")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(videoRequest));
+                .content(objectMapper.writeValueAsString(videoRequest))
+                .headers(this.getHeader());
 
         mockMvc.perform(request)
                 .andDo(MockMvcResultHandlers.print())
@@ -75,7 +96,8 @@ public class VideoControllerTest {
         String id = video.getId().toString();
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 .get("/v1/videos/{id}", id)
-                .contentType(MediaType.APPLICATION_JSON);
+                .contentType(MediaType.APPLICATION_JSON)
+                .headers(this.getHeader());
 
         mockMvc.perform(request)
                 .andDo(MockMvcResultHandlers.print())
@@ -87,7 +109,8 @@ public class VideoControllerTest {
     void deveBuscarTodosOsVideos() throws Exception {
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 .get("/v1/videos")
-                .contentType(MediaType.APPLICATION_JSON);
+                .contentType(MediaType.APPLICATION_JSON)
+                .headers(this.getHeader());
 
         mockMvc.perform(request)
                 .andDo(MockMvcResultHandlers.print())
