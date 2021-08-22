@@ -1,5 +1,6 @@
 package br.com.alura.aluraflix.controller;
 
+import br.com.alura.aluraflix.controller.dto.LoginRequest;
 import br.com.alura.aluraflix.controller.dto.VideoRequestAtualizar;
 import br.com.alura.aluraflix.controller.dto.VideoRequestSalvar;
 import br.com.alura.aluraflix.entity.Categoria;
@@ -23,6 +24,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.io.UnsupportedEncodingException;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
@@ -40,17 +43,24 @@ public class VideoControllerTest {
     private CategoriaRepository categoriaRepository;
 
     private HttpHeaders getHeader() throws Exception {
-        String credencialDeAutenticacao = "{\"email\":\"admin@email.com\",\"senha\":\"123456\"}";
-        MvcResult autententicacaoResult = mockMvc.perform(MockMvcRequestBuilders.post("/v1/auth")
+        LoginRequest loginRequest = new LoginRequest("admin@email.com", "123456");
+        String loginRequestJson = objectMapper.writeValueAsString(loginRequest);
+
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/v1/auth")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(credencialDeAutenticacao))
+                .content(loginRequestJson);
+
+        MvcResult result = mockMvc.perform(request)
                 .andReturn();
 
-        String content = autententicacaoResult.getResponse().getContentAsString();
-        String token = JsonPath.read(content, "$.token");
+        return getHttpHeaderAutenticado(result);
+    }
+
+    private HttpHeaders getHttpHeaderAutenticado(MvcResult result) throws UnsupportedEncodingException {
+        String response = result.getResponse().getContentAsString();
+        String token = JsonPath.read(response, "$.token");
         HttpHeaders header = new HttpHeaders();
         header.setBearerAuth(token);
-
         return header;
     }
 
