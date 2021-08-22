@@ -20,6 +20,7 @@ Aluraflix é uma implementação de uma `API REST` desenvolvida durante o **Alur
 - Spring Boot
 - Spring Data
 - Spring Boot Developer Tools
+- Spring Docs
 - H2 Database
 - Mysql
 - Docker e Docker Compose (Banco de dados Mysql)
@@ -33,14 +34,13 @@ git clone https://github.com/adrianoavelino/aluraflix.git
 
 # entre no diretório
 cd aluraflix
-
-# inicie o container mysql
-docker-compose up -d
-
-# inicie a aplicação
-./mvnw spring-boot:run
 ```
-Para inicialalizar a aplicação no container no ambiente de produção execute os seguintes passos, após clonar e entrar no diretório da aplicação:
+Para inicializar a aplicação utilizando docker-compose:
+```bash
+# inicie a aplicação
+docker-compose up -d
+```
+Para inicialalizar a aplicação no container, no ambiente de produção, utilizando docker, execute os seguintes passos, após clonar e entrar no diretório da aplicação:
 ```bash
 # gera o jar da aplicação
 ./mvnw clean package -DskipTests
@@ -49,7 +49,7 @@ Para inicialalizar a aplicação no container no ambiente de produção execute 
 docker build -t adrianoavelino/aluraflix:1 .
 
 # inicia o container do banco de dados
-docker-compose up -d
+docker-compose up -d db
 
 # inicia a aplicação no docker
 docker run -it -p 8080:8080 \
@@ -63,6 +63,27 @@ docker run -it -p 8080:8080 \
 --network=aluraflix_default adrianoavelino/aluraflix:1
 ```
 
+Para inicializar a aplicação, utilizando live reload, em sua IDE:
+- configure as variáveis de ambiente:
+
+|Nome                   |Valor                                      |
+|-----------------------|-------------------------------------------|
+|SPRING_PROFILES_ACTIVE | prod                                      |
+|DATASOURCE_URL         | jdbc:postgresql://localhost:5432/aluraflix|
+|DATASOURCE_USERNAME    | adriano                                   |
+|DATASOURCE_PASSWORD    | adriano                                   |
+|DATASOURCE_DATABASE    | aluraflix                                 |
+|JWT_SECRET             |123456                                     |
+|JWT_EXPIRATION         |8640000                                    |
+|SERVER_PORT            |8080                                       |
+
+- inicie o banco de dados:
+```bash
+# inicia o container do banco de dados
+docker-compose up -d db
+```
+Agora bastar iniciar a aplicação utilizando a classe `src/main/java/br/com/alura/aluraflix/AluraflixApplication.java`.
+
 ### Outras informações
 Para acessar o banco de dados via linha de comando no docker execute:
 ```bash
@@ -73,6 +94,12 @@ Usuário e senha do banco de dados:
 |Usuário|Senha  |
 --------|----   |
 |adriano|adriano|
+
+### Documentação
+A documentação da API está disponível [localmente](http://localhost:8080/swagger-ui.html) ou na aplicação online no [Heroku](https://aluraflixbackend.herokuapp.com/swagger-ui.html).
+
+![Imagem da documentação usandoo Swagger](./documentation-swagger.png)
+
 
 ## Testes
 
