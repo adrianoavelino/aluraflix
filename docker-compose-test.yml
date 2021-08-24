@@ -1,0 +1,19 @@
+version: "3.5"
+
+services:
+  test:
+    container_name: test
+    build:
+      context: .
+      dockerfile: Dockerfile-test
+    volumes:
+      - m2-test:/root/.m2
+    environment:
+      SPRING_DATASOURCE_URL: 'jdbc:h2:mem:testaluraflix'
+      SPRING_DATASOURCE_USERNAME: 'sa'
+      SPRING_DATASOURCE_PASSWORD: ''
+      FORUM_JWT_SECRET: '123456'
+      FORUM_JWT_EXPIRATION: '8640000'
+
+volumes:
+  m2-test:
