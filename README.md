@@ -105,13 +105,47 @@ A documentação da API está disponível [localmente](http://localhost:8080/swa
 
 ### Testes automatizados
 Comando para executar testes no terminal:
-- Repository:
+
+> antes de executar os teste inicie o container do banco de dados com o comando `docker-compose up -d db`
+
+- Testes de Repository:
 ```bash
-./mvnw test -Dtest=br.com.alura.aluraflix.repository.VideoRepositoryTest -e
+# VideoRepositoryTest
+./mvnw test -Dspring.datasource.url=jdbc:h2:mem:testaluraflix \
+-Dspring.datasource.username=sa \
+-Dspring.datasource.password= \
+-Dforum.jwt.secret=123456 \
+-Dforum.jwt.expiration=8640000 \
+-Dtest=br.com.alura.aluraflix.repository.VideoRepositoryTest -e
 ```
-- Controller:
 ```bash
-./mvnw test -Dtest=br.com.alura.aluraflix.controller.VideoControllerTest -e
+# CategoriaRepositoryTest
+./mvnw test -Dspring.datasource.url=jdbc:h2:mem:testaluraflix \
+-Dspring.datasource.username=sa \
+-Dspring.datasource.password= \
+-Dforum.jwt.secret=123456 \
+-Dforum.jwt.expiration=8640000 \
+-Dtest=br.com.alura.aluraflix.repository.CategoriaRepositoryTest -e
+```
+- VideoController:
+```bash
+# VideoControllerTest
+./mvnw test -Dspring.datasource.url=jdbc:h2:mem:testaluraflix \
+-Dspring.datasource.username=sa \
+-Dspring.datasource.password= \
+-Dforum.jwt.secret=123456 \
+-Dforum.jwt.expiration=8640000 \
+-Dtest=br.com.alura.aluraflix.controller.VideoControllerTest -e
+```
+
+```bash
+# CategoriaControllerTest
+./mvnw test -Dspring.datasource.url=jdbc:h2:mem:testaluraflix \
+-Dspring.datasource.username=sa \
+-Dspring.datasource.password= \
+-Dforum.jwt.secret=123456 \
+-Dforum.jwt.expiration=8640000 \
+-Dtest=br.com.alura.aluraflix.controller.CategoriaControllerTest -e
 ```
 
 ### Testes manuais
