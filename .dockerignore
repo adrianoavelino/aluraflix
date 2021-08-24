@@ -16,3 +16,4 @@ mvnw
 mvnw.cmd
 README.md
 target
+!target/*.jar
