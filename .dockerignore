@@ -7,6 +7,7 @@ Dockerfile.test
 documentation-swagger.png
 .env
 .env-sample
+.env-test
 .git
 .gitignore
 HELP.md
