@@ -104,9 +104,14 @@ A documentação da API está disponível [localmente](http://localhost:8080/swa
 ## Testes
 
 ### Testes automatizados
-Comando para executar testes no terminal:
+
+O testes autopmatizados podem ser executados em três ambientes: `localmente`, via `docker` ou `docker-compose`:
+
+### Testes no ambiente local
 
 > antes de executar os teste inicie o container do banco de dados com o comando `docker-compose up -d db`
+
+Comando para executar os testes no terminal:
 
 - Testes de Repository:
 ```bash
@@ -146,6 +151,24 @@ Comando para executar testes no terminal:
 -Dforum.jwt.secret=123456 \
 -Dforum.jwt.expiration=8640000 \
 -Dtest=br.com.alura.aluraflix.controller.CategoriaControllerTest -e
+```
+
+### Testes via docker
+> antes de executar os teste inicie o container do banco de dados com o comando `docker-compose up -d db`
+
+```bash
+# gera a imagem docker da aplicação
+docker build -t adrianoavelino/aluraflix_test:latest . -f Dockerfile-test
+
+# executa os testes
+docker run -it -v /tmp/m2docker:/root/.m2 \
+-v /tmp/m2docker:/root/.m2 \
+-e SPRING_DATASOURCE_URL='jdbc:h2:mem:testaluraflix' \
+-e SPRING_DATASOURCE_USERNAME='sa' \
+-e SPRING_DATASOURCE_PASSWORD='' \
+-e FORUM_JWT_SECRET='123456' \
+-e FORUM_JWT_EXPIRATION='8640000' \
+--network=aluraflix_default adrianoavelino/aluraflix_test:latest
 ```
 
 ### Testes manuais
