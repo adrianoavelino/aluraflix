@@ -171,6 +171,11 @@ docker run -it -v /tmp/m2docker:/root/.m2 \
 --network=aluraflix_default adrianoavelino/aluraflix_test:latest
 ```
 
+### Testes via docker-compose
+```bash
+docker-compose -f docker-compose-test.yml up --build
+```
+
 ### Testes manuais
 - GET `/v1/videos`:
 ```bash
