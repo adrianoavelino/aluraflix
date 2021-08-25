@@ -22,10 +22,11 @@ Aluraflix é uma implementação de uma `API REST` desenvolvida durante o **Alur
 - Spring Boot Developer Tools
 - Spring Docs
 - H2 Database
-- Mysql
-- Docker e Docker Compose (Banco de dados Mysql)
+- PostgreSQL
+- Docker e Docker Compose
 - Junit Jupiter
-- Hibernate/Jakarta Validator
+- Hibernate
+- Jakarta Validator
 
 ## Começando
 ```bash
