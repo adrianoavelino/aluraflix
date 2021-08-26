@@ -120,8 +120,8 @@ Comando para executar os testes no terminal:
 ./mvnw test -Dspring.datasource.url=jdbc:h2:mem:testaluraflix \
 -Dspring.datasource.username=sa \
 -Dspring.datasource.password= \
--Dforum.jwt.secret=123456 \
--Dforum.jwt.expiration=8640000 \
+-Djwt.secret=123456 \
+-Djwt.expiration=8640000 \
 -Dtest=br.com.alura.aluraflix.repository.VideoRepositoryTest -e
 ```
 ```bash
@@ -129,8 +129,8 @@ Comando para executar os testes no terminal:
 ./mvnw test -Dspring.datasource.url=jdbc:h2:mem:testaluraflix \
 -Dspring.datasource.username=sa \
 -Dspring.datasource.password= \
--Dforum.jwt.secret=123456 \
--Dforum.jwt.expiration=8640000 \
+-Djwt.secret=123456 \
+-Djwt.expiration=8640000 \
 -Dtest=br.com.alura.aluraflix.repository.CategoriaRepositoryTest -e
 ```
 - VideoController:
@@ -139,8 +139,8 @@ Comando para executar os testes no terminal:
 ./mvnw test -Dspring.datasource.url=jdbc:h2:mem:testaluraflix \
 -Dspring.datasource.username=sa \
 -Dspring.datasource.password= \
--Dforum.jwt.secret=123456 \
--Dforum.jwt.expiration=8640000 \
+-Djwt.secret=123456 \
+-Djwt.expiration=8640000 \
 -Dtest=br.com.alura.aluraflix.controller.VideoControllerTest -e
 ```
 
@@ -149,8 +149,8 @@ Comando para executar os testes no terminal:
 ./mvnw test -Dspring.datasource.url=jdbc:h2:mem:testaluraflix \
 -Dspring.datasource.username=sa \
 -Dspring.datasource.password= \
--Dforum.jwt.secret=123456 \
--Dforum.jwt.expiration=8640000 \
+-Djwt.secret=123456 \
+-Djwt.expiration=8640000 \
 -Dtest=br.com.alura.aluraflix.controller.CategoriaControllerTest -e
 ```
 
@@ -167,8 +167,8 @@ docker run -it -v /tmp/m2docker:/root/.m2 \
 -e SPRING_DATASOURCE_URL='jdbc:h2:mem:testaluraflix' \
 -e SPRING_DATASOURCE_USERNAME='sa' \
 -e SPRING_DATASOURCE_PASSWORD='' \
--e FORUM_JWT_SECRET='123456' \
--e FORUM_JWT_EXPIRATION='8640000' \
+-e JWT_SECRET='123456' \
+-e JWT_EXPIRATION='8640000' \
 --network=aluraflix_default adrianoavelino/aluraflix_test:latest
 ```
 
