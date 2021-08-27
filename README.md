@@ -178,100 +178,74 @@ docker-compose -f docker-compose-test.yml up --build
 ```
 
 ### Testes manuais
-- GET `/v1/videos`:
+
+Primeiramente vamos realizar a única requisição que não necessita de token, a requisição para os vídeos free:
+- GET `/v1/videos/free`
 ```bash
-curl --location --request GET 'http://localhost:8080/v1/videos'
-```
-Exemplo de reposta:
-```json
-{
-    "content": [
-        {
-            "id": 2,
-            "titulo": "Mysql",
-            "descricao": "Do básico ao avançado com Mysql",
-            "url": "https://www.meusite.com.br/mysql"
-        },
-        {
-            "id": 3,
-            "titulo": "Docker",
-            "descricao": "Primeiros passos com docker",
-            "url": "https://www.meusite.com.br/docker"
-        }
-    ],
-    "pageable": {
-        "sort": {
-            "sorted": false,
-            "unsorted": true,
-            "empty": true
-        },
-        "pageNumber": 0,
-        "pageSize": 20,
-        "offset": 0,
-        "paged": true,
-        "unpaged": false
-    },
-    "totalPages": 1,
-    "totalElements": 2,
-    "last": true,
-    "sort": {
-        "sorted": false,
-        "unsorted": true,
-        "empty": true
-    },
-    "number": 0,
-    "first": true,
-    "numberOfElements": 2,
-    "size": 20,
-    "empty": false
-}
-```
-- GET `/v1/videos/{id}`:
-```bash
-curl --location --request GET 'http://localhost:8080/v1/videos/1'
+curl --location --request GET 'http://localhost:8080/v1/videos/free'
 ```
 
-Exemplo de reposta:
+Para as próximas requisições iremos precisar de um token válido que
+conseguimos através da seguinte requisição:
+- POST `/v1/auth`:
+```bash
+curl --location --request POST 'http://localhost:8080/v1/auth' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "email": "admin@email.com",
+    "senha": "123456"
+}'
+```
+Exemplo de resposta:
 ```json
 {
-    "id": 1,
-    "titulo": "Domain Driven Design com Alberto Sousa, o Dev Eficiente",
-    "descricao": "Domain Driven Design, o que ? Por que foi criada e qual objetivo dessa linguagem dentro da programao?",
-    "url": "https://www.youtube.com/watch?v=n40Z1c9Ryog"
+    "token": "<SEU_TOKEN>",
+    "bearer": "Bearer"
 }
 ```
+> `<SEU_TOKEN>` será um valor semelhante à `eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJBUEkgQWx1cmFmbGl4Iiwic3ViIjoiMSIsImlhdCI6MTYzMDAyMTU4NiwiZXhwIjoxNjMwMDMwMjI2fQ.pE1i-QSn3YCrCw48hp6KJe_bBTWTSpqZ-wnRUHhn1J0`
+
+Com o token em mãos é possível realizar as seguintes requisições:
+
+- GET `/v1/videos`:
+```bash
+curl --location --request GET 'http://localhost:8080/v1/videos/' \
+--header 'Authorization: Bearer <SEU_TOKEN>'
+```
+
+- GET `/v1/videos/{id}`:
+```bash
+curl --location --request GET 'http://localhost:8080/v1/videos/1' \
+--header 'Authorization: Bearer <SEU_TOKEN>'
+```
+
 - POST `/v1/videos`:
 ```bash
 curl --location --request POST 'http://localhost:8080/v1/videos' \
+--header 'Authorization: Bearer <SEU_TOKEN>' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "titulo": "Algumas Dicas de CSS",
     "descricao": "Dicas de uso de SASS e especificadade CSS",
-    "url": "https://youtu.be/bOdrGg5oc3E"
+    "url": "https://youtu.be/bOdrGg5oc3E",
+    "categoriaId": 1
 }'
 ```
-Exemplo de reposta:
-```json
-{
-    "id": 4,
-    "titulo": "Algumas Dicas de CSS",
-    "descricao": "Dicas de uso de SASS e especificadade CSS",
-    "url": "https://youtu.be/bOdrGg5oc3E"
-}
-```
+
 - PUT `/v1/videos/{id}`:
 ```bash
-curl --location --request PUT 'http://localhost:8080/v1/videos' \
+curl --location --request PUT 'http://localhost:8080/v1/videos/' \
+--header 'Authorization: Bearer <SEU_TOKEN>' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-    "id": 22,
-    "titulo": "Atualizado Domain Driven Design com Alberto Sousa, o Dev Eficiente",
-    "descricao": "Atualizado Domain Driven Design, o que ? Por que foi criada e qual objetivo dessa linguagem dentro da programao?",
-    "url": "https://www.youtube.com/watch?v=atualizado"
-}'
+    "id": 1,
+    "titulo": "Algumas Dicas de CSS atualizado",
+    "descricao": "Dicas de uso de SASS e especificadade CSS Atualizado",
+    "url": "https://www.youtube.com/watch?v=atualizado",
+    "categoriaId": 2
 ```
 - DELETE `/v1/videos/{id}`:
 ```bash
-curl --location --request DELETE 'http://localhost:8080/v1/videos/1' \
---data-raw ''
+curl --location --request DELETE 'http://localhost:8080/v1/videos/2' \
+--header 'Authorization: Bearer <SEU_TOKEN>'
 ```
