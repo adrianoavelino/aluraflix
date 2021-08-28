@@ -249,3 +249,44 @@ curl --location --request PUT 'http://localhost:8080/v1/videos/' \
 curl --location --request DELETE 'http://localhost:8080/v1/videos/2' \
 --header 'Authorization: Bearer <SEU_TOKEN>'
 ```
+
+- GET `/v1/categorias`
+```bash
+curl --location --request GET 'http://localhost:8080/v1/categorias' \
+--header 'Authorization: Bearer <SEU_TOKEN>'
+```
+
+- GET `/v1/categorias/{id}`
+```bash
+curl --location --request GET 'http://localhost:8080/v1/categorias/1' \
+--header 'Authorization: Bearer <SEU_TOKEN>'
+```
+
+- POST `/v1/categorias`
+```bash
+curl --location --request POST 'http://localhost:8080/v1/categorias' \
+--header 'Authorization: Bearer <SEU_TOKEN>' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "titulo": "categoria 2",
+    "cor": "#ffccff"
+}'
+```
+
+- PUT `/v1/categorias`
+```bash
+curl --location --request PUT 'http://localhost:8080/v1/categorias' \
+--header 'Authorization: Bearer <SEU_TOKEN>' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "id": 1,
+    "titulo": "LIVRE Atualizado",
+    "cor": "#FFFFFFF atualizado"
+}'
+```
+
+- DELETE `/v1/categorias/{id}`
+```bash
+curl --location --request DELETE 'http://localhost:8080/v1/categorias/2' \
+--header 'Authorization: Bearer <SEU_TOKEN>'
+```
